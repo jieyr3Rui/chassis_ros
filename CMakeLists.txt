@@ -118,7 +118,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES chassis_ros
   CATKIN_DEPENDS roscpp serial
-  DEPENDS system_lib
+#  DEPENDS system_lib
   CATKIN_DEPENDS
   roscpp
 
