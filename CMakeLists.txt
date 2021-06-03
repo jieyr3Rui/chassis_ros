@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 2.8.3)
 project(chassis_ros)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -9,9 +9,9 @@ project(chassis_ros)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  rospy
   serial
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -53,6 +53,10 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message1.msg
 #   Message2.msg
 # )
+add_message_files(
+  FILES
+  velocity.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -71,8 +75,15 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs
+#   std_msgs  # Or other packages containing msgs
 # )
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+
+)
+
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -104,11 +115,15 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES chassis_ros
-#  CATKIN_DEPENDS roscpp rospy serial std_msgs
-#  DEPENDS system_lib
-)
+  INCLUDE_DIRS include
+  LIBRARIES chassis_ros
+  CATKIN_DEPENDS roscpp serial
+  DEPENDS system_lib
+  CATKIN_DEPENDS
+  roscpp
+
+  message_runtime
+ )
 
 ###########
 ## Build ##
@@ -160,23 +175,16 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
+# install(PROGRAMS
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-## Mark executables for installation
-## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-# install(TARGETS ${PROJECT_NAME}_node
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-## Mark libraries for installation
-## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-# install(TARGETS ${PROJECT_NAME}
+## Mark executables and/or libraries for installation
+# install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
 ## Mark cpp header files for installation
@@ -205,3 +213,33 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+
+
+
+
+
+add_executable(serial_port src/serial_port.cpp)
+ 
+add_dependencies(serial_port ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ 
+target_link_libraries(serial_port
+  ${catkin_LIBRARIES}
+)
+
+
+add_executable(chassis_vel src/chassis_vel.cpp)
+ 
+add_dependencies(chassis_vel ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ 
+target_link_libraries(chassis_vel
+  ${catkin_LIBRARIES}
+)
+
+add_executable(keyboard_control src/keyboard_control.cpp)
+ 
+add_dependencies(keyboard_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ 
+target_link_libraries(keyboard_control
+  ${catkin_LIBRARIES}
+)
