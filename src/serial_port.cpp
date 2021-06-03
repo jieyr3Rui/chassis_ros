@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 
     serial::Timeout to = serial::Timeout::simpleTimeout(100);
 
-    sp.setPort("/dev/ch340");
+    sp.setPort("/dev/ttyUSB0");
 
     sp.setBaudrate(115200);
 
