@@ -9,7 +9,7 @@ project(chassis_ros)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  serial
+  rospy
   std_msgs
   message_generation
 )
@@ -117,11 +117,9 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES chassis_ros
-  CATKIN_DEPENDS roscpp serial
-#  DEPENDS system_lib
-  CATKIN_DEPENDS
+  CATKIN_DEPENDS 
   roscpp
-
+  rospy
   message_runtime
  )
 
@@ -216,26 +214,9 @@ include_directories(
 
 
 
-
-
-# serial_port
-add_executable(serial_port src/serial_port.cpp)
-add_dependencies(serial_port ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(serial_port
-  ${catkin_LIBRARIES}
-)
-
-# chassis_vel
-add_executable(chassis_vel src/chassis_vel.cpp)
-add_dependencies(chassis_vel ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(chassis_vel
-  ${catkin_LIBRARIES}
-)
-
-
-# keyboard_control
-add_executable(keyboard_control src/keyboard_control.cpp)
-add_dependencies(keyboard_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(keyboard_control
+# chassis_brain
+add_executable(chassis_brain src/chassis_brain.cpp)
+add_dependencies(chassis_brain ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(chassis_brain
   ${catkin_LIBRARIES}
 )
