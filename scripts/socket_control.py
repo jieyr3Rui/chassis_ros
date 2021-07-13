@@ -16,7 +16,9 @@ def main():
     policy_mode_pub = rospy.Publisher("policy_mode", String, queue_size=10)
 
     # init socket
-    host='192.168.1.126'
+    # host='192.168.1.126'
+    host = rospy.get_param("~server_ip")
+    rospy.loginfo("socket: get server_ip = " + str(host))
     # host='localhost'
     port=12344
     addr=(host,port)

@@ -21,7 +21,9 @@ def main():
 
     # init socket
     # USB 模式下，机器人默认 IP 地址为 192.168.42.2, 控制命令端口号为 40923
-    host = "192.168.1.159"
+    # host = "192.168.1.159"
+    host = rospy.get_param("~chassis_ip")
+    rospy.loginfo("chassis: get chassis_ip = " + str(host))
     port = 40923
     address = (host, int(port))
     # 与机器人控制命令端口建立 TCP 连接
