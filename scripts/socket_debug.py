@@ -24,7 +24,8 @@ def main():
     rospy.Subscriber("serial_out", String, serial_out_callback)
 
     # init socket
-    host='192.168.1.126'
+    host = '192.168.1.129'
+    # host='localhost'
     port=12355
     addr=(host,port)
     tcpCliSock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)

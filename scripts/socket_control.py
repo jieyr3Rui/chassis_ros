@@ -17,26 +17,30 @@ def main():
 
     # init socket
     host='192.168.1.126'
+    # host='localhost'
     port=12344
     addr=(host,port)
     tcpCliSock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     buffsize=1024  
-    print("connecting...")
+    rospy.loginfo("socket: connecting...")
     tcpCliSock.connect(addr)
-    print("connected!")
+    rospy.loginfo("socket: connected!")
 
     while not rospy.is_shutdown():
         try:
             scm = tcpCliSock.recv(buffsize).decode('utf-8')
+            if not scm:
+                rospy.loginfo("socket: stop")
+                break
             if len(scm) <= 1:
-                print("error scm")
+                rospy.loginfo("socket: error scm")
                 continue
 
-            print(len(scm) , " ", scm)
+            rospy.loginfo("socket: " + str(len(scm)) + " " + str(scm))
 
             # control_vel
             if (scm[0] == "v") & (len(scm) == 2):
-                print("control_vel")
+                rospy.loginfo("socket: control_vel")
                 # velocity setting
                 vel = velocity()
                 vel.x = 0
@@ -59,21 +63,21 @@ def main():
 
             # policy
             elif scm[0] == "p":
-                print("policy_mode")
+                rospy.loginfo("socket: policy_mode")
                 policy_mode_pub.publish(scm[1:len(scm)])
                 continue
             
             elif scm[0] == "c":
-                print("command;")
+                rospy.loginfo("socket: chassis command")
                 command_pub.publish(scm[1:len(scm)])
                 continue
 
             else:
-                print("unknow control")
+                rospy.loginfo("socket: unknow control")
                 continue
 
         except socket.error as e:
-            print("Error receiving :", e)
+            rospy.loginfo("socket: error receiving :", e)
             sys.exit(1)
 
     # close socket

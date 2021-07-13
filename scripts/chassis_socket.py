@@ -8,7 +8,7 @@ import sys
 
 def serial_in_callback(msg):
     global s
-    print("socket in:  ", msg.data)
+    rospy.loginfo("chassis: in : " + str(msg.data))
     s.send(msg.data.encode('utf-8'))
     return
 
@@ -27,16 +27,16 @@ def main():
     # 与机器人控制命令端口建立 TCP 连接
     global s
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print("Connecting...")
+    rospy.loginfo("chassis: connecting...")
     s.connect(address)
-    print("Connected!")
+    rospy.loginfo("chassis: connected!")
 
     while not rospy.is_shutdown():
         try:
             # 等待机器人返回执行结果
             buf = s.recv(1024)
             serial_out = buf.decode('utf-8')
-            print("serial_out: ", serial_out)
+            rospy.loginfo("chassis: out: " + str(serial_out))
             publisher.publish(serial_out)
         except socket.error as e:
             print("Error receiving :", e)
